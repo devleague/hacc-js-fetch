@@ -5,6 +5,31 @@
     return Object.keys(params).map( key => `${key}=${encodeURIComponent(params[key])}`).join('&');
   }
 
+  var FarmersMarketList = React.createClass({
+    render: function() {
+      return <div>
+        { this.props.farmers.map(market =>
+          <FarmersMarket
+           contact={market.contact}
+           farmer_s_market={market.farmer_s_market}
+           location_info={market.location_info}
+           />
+          )
+        }
+      </div>;
+    }
+  });
+
+  var FarmersMarket = React.createClass({
+    render: function() {
+      return <div>
+        <h3>{this.props.contact}</h3>
+        <h4>{this.props.farmer_s_market}</h4>
+        <p>{this.props.location_info}</p>
+      </div>;
+    }
+  });
+
   /*
    * FarmersMarket
    * contact :"Paul Richard"
@@ -18,29 +43,10 @@
    * time : "9:00 AM to 4:00PM"
    */
   function farmersRender( farmers ){
-    // append each farmer to the dom
-    var container = document.getElementById('farmers');
-
-    farmers.map(function(market){
-      var child = document.createElement('div');
-      child.classList.add('farmersMarket');
-
-      var contact = document.createElement('h3');
-      contact.innerHTML = market.contact || '(Missing Contact)';
-
-      var farmer_s_market = document.createElement('h4');
-      farmer_s_market.innerHTML = market.farmer_s_market;
-
-      var location = document.createElement('p');
-      location.innerHTML = market.location_info || '(Missing location)';
-
-      child.appendChild(contact);
-      child.appendChild(farmer_s_market);
-      child.appendChild(location);
-      return child;
-    })
-    .forEach(container.appendChild.bind(container));
-
+    ReactDOM.render(
+      <FarmersMarketList farmers={farmers} />,
+      document.getElementById('farmers')
+    );
   }
 
   var farmersMarketEndpoint = 'https://data.hawaii.gov/resource/b2y9-ab7v.json';
